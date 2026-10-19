@@ -1,0 +1,38 @@
+{
+  "name": "f9_skills",
+  "version": "1.0.0",
+  "description": "Portable AI Developer Skills Ecosystem CLI",
+  "private": true,
+  "bin": {
+    "f9_skills": "./bin/cli.js",
+    "f9-skills": "./bin/cli.js"
+  },
+  "files": [
+    ".agents",
+    "templates",
+    "bin",
+    "src",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "README.md",
+    "scripts"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "validate": "python3 scripts/validate-skills.py"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "ai",
+    "agents",
+    "skills",
+    "coding-agent",
+    "claude",
+    "antigravity",
+    "cli"
+  ],
+  "author": "IamFreak10",
+  "license": "MIT"
+}
