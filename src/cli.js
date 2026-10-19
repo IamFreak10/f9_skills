@@ -134,7 +134,7 @@ ${bold('USAGE')}
 
 ${bold('COMMANDS')}
   ${yellow('init')}                 Install skills, templates, and agent rules into project
-  ${yellow('list')}                 Display all 13 available skills and descriptions
+  ${yellow('list')}                 Display available skills and descriptions
   ${yellow('help')}                 Display this help information
   ${yellow('version')}              Show CLI version
 

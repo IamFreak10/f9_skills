@@ -7,6 +7,9 @@ const path = require('node:path');
 const os = require('node:os');
 const { installSkills, getAvailableSkills, findPackageRoot } = require('../src/installer');
 
+const SKILL_COUNT = getAvailableSkills().length;
+const DEFAULT_INSTALL_FILE_COUNT = SKILL_COUNT + 4; // skills, three templates, and one instruction file
+
 describe('installer core tests', () => {
   let tempDir;
 
@@ -20,21 +23,22 @@ describe('installer core tests', () => {
     }
   });
 
-  test('locates package root and discovers all 13 skills', () => {
+  test('locates package root and discovers the canonical skill inventory', () => {
     const root = findPackageRoot();
     assert.ok(fs.existsSync(root));
     const skills = getAvailableSkills(root);
-    assert.equal(skills.length, 13);
+    assert.equal(skills.length, SKILL_COUNT);
     assert.ok(skills.includes('auth-security'));
     assert.ok(skills.includes('feature-planner'));
     assert.ok(skills.includes('debugging'));
+    assert.ok(skills.includes('reference-driven-build'));
   });
 
   test('installs canonical .agents/skills/, templates, and AGENTS.md in default agents mode', () => {
     const res = installSkills({ targetDir: tempDir, mode: 'agents' });
 
     assert.equal(res.hasConflicts, false);
-    assert.equal(res.stats.created, 13 + 3 + 1); // 13 skills + 3 templates + AGENTS.md
+    assert.equal(res.stats.created, DEFAULT_INSTALL_FILE_COUNT);
     assert.equal(res.stats.unchanged, 0);
     assert.equal(res.stats.conflicts, 0);
 
@@ -54,7 +58,7 @@ describe('installer core tests', () => {
     const res = installSkills({ targetDir: tempDir, mode: 'claude' });
 
     assert.equal(res.hasConflicts, false);
-    assert.equal(res.stats.created, 13 + 3 + 1);
+    assert.equal(res.stats.created, DEFAULT_INSTALL_FILE_COUNT);
     assert.ok(fs.existsSync(path.join(tempDir, '.claude', 'skills', 'auth-security', 'SKILL.md')));
     assert.ok(fs.existsSync(path.join(tempDir, 'CLAUDE.md')));
     assert.equal(fs.existsSync(path.join(tempDir, '.agents')), false);
@@ -65,7 +69,7 @@ describe('installer core tests', () => {
     const res = installSkills({ targetDir: tempDir, mode: 'both' });
 
     assert.equal(res.hasConflicts, false);
-    assert.equal(res.stats.created, 13 * 2 + 3 + 2); // 26 skill files + 3 templates + 2 rules
+    assert.equal(res.stats.created, SKILL_COUNT * 2 + 5); // skills in both layouts + three templates + two rule files
     assert.ok(fs.existsSync(path.join(tempDir, '.agents', 'skills', 'git-cicd', 'SKILL.md')));
     assert.ok(fs.existsSync(path.join(tempDir, '.claude', 'skills', 'git-cicd', 'SKILL.md')));
     assert.ok(fs.existsSync(path.join(tempDir, 'AGENTS.md')));
@@ -74,11 +78,11 @@ describe('installer core tests', () => {
 
   test('repeated runs are idempotent and report 0 created, all unchanged', () => {
     const firstRun = installSkills({ targetDir: tempDir, mode: 'agents' });
-    assert.equal(firstRun.stats.created, 17);
+    assert.equal(firstRun.stats.created, DEFAULT_INSTALL_FILE_COUNT);
 
     const secondRun = installSkills({ targetDir: tempDir, mode: 'agents' });
     assert.equal(secondRun.stats.created, 0);
-    assert.equal(secondRun.stats.unchanged, 17);
+    assert.equal(secondRun.stats.unchanged, DEFAULT_INSTALL_FILE_COUNT);
     assert.equal(secondRun.stats.conflicts, 0);
     assert.equal(secondRun.stats.overwritten, 0);
     assert.equal(secondRun.hasConflicts, false);
@@ -102,7 +106,7 @@ describe('installer core tests', () => {
     assert.equal(res.hasConflicts, true);
     assert.equal(res.stats.conflicts, 2);
     assert.equal(res.stats.created, 0);
-    assert.equal(res.stats.unchanged, 15);
+    assert.equal(res.stats.unchanged, DEFAULT_INSTALL_FILE_COUNT - 2);
 
     // Verify user files were NOT modified or overwritten
     assert.equal(fs.readFileSync(userRulePath, 'utf8'), '# Custom User Rules - Do Not Overwrite\nMy custom rule');
@@ -119,14 +123,14 @@ describe('installer core tests', () => {
 
     assert.equal(res.hasConflicts, false);
     assert.equal(res.stats.overwritten, 1);
-    assert.equal(res.stats.unchanged, 16);
+    assert.equal(res.stats.unchanged, DEFAULT_INSTALL_FILE_COUNT - 1);
     assert.notEqual(fs.readFileSync(userRulePath, 'utf8'), '# Custom User Rules');
   });
 
   test('dry-run does not write any files or directories', () => {
     const res = installSkills({ targetDir: tempDir, mode: 'agents', dryRun: true });
 
-    assert.equal(res.stats.created, 17);
+    assert.equal(res.stats.created, DEFAULT_INSTALL_FILE_COUNT);
     assert.equal(res.dryRun, true);
 
     // Temp dir must remain completely empty

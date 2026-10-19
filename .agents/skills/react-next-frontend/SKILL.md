@@ -13,7 +13,7 @@ Implement accessible, resilient React interfaces while respecting the actual Rea
 Use for components, routing, forms, API integration, rendering/hydration issues, frontend performance, and interaction tests.
 
 ## Required context
-Inspect `package.json`/lockfile, App Router versus Pages Router, React/Next versions, existing component patterns, styling system, fetch/cache conventions, and test setup.
+Inspect `package.json`/lockfile, App Router versus Pages Router, React/Next versions, existing component patterns, styling system, fetch/cache conventions, and test setup. When the task includes screenshots, docs, links, or GitHub examples, also use `reference-driven-build` to map evidence and resolve version compatibility.
 
 ## Step-by-step workflow
 1. Trace route → component → data source → mutation flow.
@@ -29,6 +29,8 @@ Inspect `package.json`/lockfile, App Router versus Pages Router, React/Next vers
 - In App Router, default to Server Components; add `'use client'` only where browser APIs, state, effects, or event handlers require it.
 - In Pages Router, follow its data-fetching and routing conventions; do not transplant App Router APIs blindly.
 - Respect framework-version caching defaults and APIs; inspect installed docs and existing usage before assuming behavior.
+- Check React/Next APIs against the installed versions and router mode. Prefer official version-matched documentation; validate newer examples against local types/source before using them.
+- For supplied UI references, translate observed structure and states into components that fit the existing design system; do not infer unseen interactions as facts.
 - Avoid effects for values that can be derived during render; use effects for synchronization with external systems.
 - Abort or ignore stale async work where appropriate; avoid waterfalls and unnecessary client bundles.
 - Treat URL state, forms, and API response types as explicit contracts.
@@ -39,6 +41,7 @@ Inspect `package.json`/lockfile, App Router versus Pages Router, React/Next vers
 - Accessing `window`/`localStorage` during server rendering.
 - Using effects to mirror props or derive simple state.
 - Assuming `fetch` caching/invalidation behavior is identical across Next versions.
+- Copying APIs from current Next.js examples into an older project without compatibility verification.
 - Swallowing request errors or rendering blank screens for failure states.
 - Adding dependencies before checking existing utilities.
 

@@ -29,7 +29,7 @@ EXPECTED_SKILLS = {
     "state-management", "ui-system", "express-nest-backend",
     "database-engineering", "auth-security", "debugging",
     "testing-quality-gates", "git-cicd", "deployment-ops",
-    "production-code-review",
+    "production-code-review", "reference-driven-build",
 }
 MINIMUM_FILE_CHARS = 900
 errors: list[str] = []

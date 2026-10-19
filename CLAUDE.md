@@ -20,6 +20,7 @@ Load only relevant skills. Route through `README.md`:
 - GitHub Actions/releases: `git-cicd`
 - Hosting/operations: `deployment-ops`
 - PR/diff review: `production-code-review`
+- Screenshots/docs/GitHub examples/current library references: `reference-driven-build` plus the relevant domain skill
 
 ## Workflow
 For substantial work use **Understand → Inspect → Plan → Implement → Verify → Review → Report**. For trivial edits, avoid unnecessary ceremony. Inspect the final diff and add regression coverage when appropriate.

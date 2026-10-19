@@ -16,7 +16,8 @@ const KNOWN_SKILLS = [
   { name: 'testing-quality-gates', desc: 'Test selection, honest quality gates, and regression coverage' },
   { name: 'git-cicd', desc: 'Safe Git, GitHub Actions, workflows, and release pipelines' },
   { name: 'deployment-ops', desc: 'Hosting, reverse proxies, process supervision, and recovery' },
-  { name: 'production-code-review', desc: 'Evidence-backed risk, defect, and migration review' }
+  { name: 'production-code-review', desc: 'Evidence-backed risk, defect, and migration review' },
+  { name: 'reference-driven-build', desc: 'Implementation from screenshots, docs, GitHub examples, and version-matched references' }
 ];
 
 const TEMPLATES = [

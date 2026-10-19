@@ -6,6 +6,10 @@ const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
 const { spawnSync } = require('node:child_process');
+const { getAvailableSkills } = require('../src/installer');
+
+const SKILL_COUNT = getAvailableSkills().length;
+const DEFAULT_FILE_COUNT = SKILL_COUNT + 4; // skills, three templates, and one instruction file
 
 const CLI_PATH = path.resolve(__dirname, '..', 'bin', 'cli.js');
 
@@ -40,20 +44,20 @@ describe('cli end-to-end tests', () => {
 
     assert.equal(code, 0, `Process failed with stderr: ${stderr}`);
     assert.match(stdout, /Installation complete/);
-    assert.match(stdout, /Created:\s+17 file\(s\)/);
+    assert.match(stdout, new RegExp(`Created:\\s+${DEFAULT_FILE_COUNT} file\\(s\\)`));
 
     assert.ok(fs.existsSync(path.join(tempDir, '.agents', 'skills', 'auth-security', 'SKILL.md')));
     assert.ok(fs.existsSync(path.join(tempDir, 'templates', 'feature-plan.md')));
     assert.ok(fs.existsSync(path.join(tempDir, 'AGENTS.md')));
   });
 
-  test('cli init repeated run is idempotent (reports 0 created, 17 unchanged)', () => {
+  test('cli init repeated run is idempotent', () => {
     runCLIProcess(['init', '--target', tempDir]);
 
     const second = runCLIProcess(['init', '--target', tempDir]);
     assert.equal(second.code, 0);
     assert.match(second.stdout, /Created:\s+0 file\(s\)/);
-    assert.match(second.stdout, /Unchanged:\s+17 file\(s\)/);
+    assert.match(second.stdout, new RegExp(`Unchanged:\\s+${DEFAULT_FILE_COUNT} file\\(s\\)`));
     assert.match(second.stdout, /Up to date!/);
   });
 
@@ -103,14 +107,15 @@ describe('cli end-to-end tests', () => {
     assert.equal(files.length, 0);
   });
 
-  test('cli list prints inventory of 13 skills', () => {
+  test('cli list prints the discovered skill inventory', () => {
     const { code, stdout } = runCLIProcess(['list']);
     assert.equal(code, 0);
-    assert.match(stdout, /Available AI Skills \(13 skills in ecosystem\)/);
+    assert.match(stdout, new RegExp(`Available AI Skills \\(${SKILL_COUNT} skills in ecosystem\\)`));
     assert.match(stdout, /auth-security/);
     assert.match(stdout, /feature-planner/);
     assert.match(stdout, /typescript-engineering/);
     assert.match(stdout, /production-code-review/);
+    assert.match(stdout, /reference-driven-build/);
   });
 
   test('cli --help and --version exit with code 0', () => {

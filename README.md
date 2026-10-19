@@ -1,6 +1,6 @@
 # AI Developer Skills Ecosystem
 
-A portable, repository-first engineering playbook for coding agents. It combines concise global instructions, 13 task-specific skills, copy-ready templates, and a dependency-free validator.
+A portable, repository-first engineering playbook for coding agents. It combines concise global instructions, 14 selectively loaded skills, copy-ready templates, and a dependency-free validator.
 
 ## What this is (and is not)
 
@@ -43,7 +43,7 @@ npx -y github:IamFreak10/f9_skills init --dry-run
 | `--force` / `-f` | Overwrite existing files that have differing content |
 | `--no-templates` | Skip installing the `templates/` directory |
 | `--no-rules` | Skip copying `AGENTS.md` / `CLAUDE.md` |
-| `npx -y github:IamFreak10/f9_skills list` | List all 13 available skills and descriptions |
+| `npx -y github:IamFreak10/f9_skills list` | List all 14 available skills and descriptions |
 | `npx -y github:IamFreak10/f9_skills --help` | Display full help documentation |
 
 ### Safety and Idempotence
@@ -59,6 +59,8 @@ npx -y github:IamFreak10/f9_skills init --dry-run
    npm test
    ```
 3. Ask your coding agent to inspect the repository, select relevant skills from the routing matrix, and follow **Understand → Inspect → Plan → Implement → Verify → Review → Report**.
+
+Skills are modular guidance, not a checklist: normally load one primary skill and only the supporting skills needed for the current task. This keeps context focused while preserving specialist instructions for security, data, testing, UI, and operations.
 
 ## Canonical source and agent compatibility
 
@@ -78,7 +80,8 @@ For agents supporting `AGENTS.md` and `.agents/skills/`, verify the specific pro
 | Type errors or type-safe refactor | `typescript-engineering` | `debugging`, relevant framework, testing | Type check and regression tests | No approval for routine local edits |
 | React/Next rendering or interaction bug | `debugging` | `react-next-frontend`, `ui-system`, `state-management`, testing | Reproduction, component tests, build/type check as available | Ask before broad architectural migration |
 | State architecture or state bug | `state-management` | `react-next-frontend`, `debugging`, testing | Store/hydration tests and behavior regression | Ask before adding a second state library |
-| UI-only change | `react-next-frontend` | `ui-system`, testing | Accessibility/interaction checks and relevant visual tests | No approval for routine local edits |
+| UI-only change in any web stack | `ui-system` | Relevant framework skill, `reference-driven-build` when using a visual reference, testing | Responsive, accessibility, interaction, and visual checks | No approval for routine local edits |
+| Screenshot, design, uploaded docs, GitHub example, or version-sensitive reference | `reference-driven-build` | Relevant framework/domain skill, `ui-system`, testing | Version/API validation and rendered reference comparison where possible | Respect normal external-write and production approval boundaries |
 | API feature | `express-nest-backend` | `typescript-engineering`, `auth-security`, testing | Validation, API/integration tests | Ask before external side effects |
 | API security or access-control issue | `auth-security` | `debugging`, backend, testing, review | Negative authorization tests and regression tests | Escalate ambiguous policy; never weaken access controls silently |
 | Schema/data-model change | `database-engineering` | Backend, testing, `deployment-ops`, review | Migration inspection, constraints, query/tests | Approval before production migration or destructive data changes |
@@ -105,6 +108,7 @@ For agents supporting `AGENTS.md` and `.agents/skills/`, verify the specific pro
 11. `git-cicd` — safe Git, GitHub Actions and releases.
 12. `deployment-ops` — hosting, reverse proxies, process supervision and recovery.
 13. `production-code-review` — evidence-backed risk and defect review.
+14. `reference-driven-build` — implementation from visual and technical references with version-aware validation.
 
 ## Standard workflow
 
